@@ -22,4 +22,9 @@ class MicrosoftRSA
 
     ms_rsa
   end
+
+  def inspect
+    # Don't expose sensitive information to console
+    self.to_s
+  end
 end

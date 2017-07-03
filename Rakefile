@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "microsoft_rsa"
   gem.homepage = "http://github.com/jasonwbarnett/microsoft_rsa"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Microsoft RSAKeyValue XML structure support for Ruby}
+  gem.description = %Q{This gem enables you to convert RSAKeyValue XML structures to OpenSSL RSA Private Key and vice versa}
   gem.email = "jason.w.barnett@gmail.com"
   gem.authors = ["Jason Barnett"]
   # dependencies defined in Gemfile

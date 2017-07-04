@@ -1,5 +1,6 @@
 require 'rexml/document'
 require 'base64'
+require 'openssl'
 
 class MicrosoftRSA
 

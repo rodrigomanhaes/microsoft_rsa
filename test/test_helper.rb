@@ -25,5 +25,3 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
-
-require 'microsoft_rsa'

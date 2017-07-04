@@ -1,7 +1,10 @@
 require 'rexml/document'
-require 'base64'
 require 'openssl'
 
+require 'microsoft_rsa/utils'
+
+# the MicrosoftRSA class represents Microsoft's RSAKeyValue XML structure
+# for a RSA Private Key
 class MicrosoftRSA
 
   ELEMENTS = {
@@ -15,49 +18,43 @@ class MicrosoftRSA
     "InverseQ" => "iqmp",
   }
 
-  ELEMENTS.each_value do |v|
-    attr_reader v
+  ELEMENTS.each_value do |field|
+    attr_reader field
   end
 
-  def self.load(file)
+  def self.load(path)
     ms_rsa = self.new
 
-    f = File.new(file)
-    doc = REXML::Document.new(f)
+    file = File.new(path)
+    doc = REXML::Document.new(file)
 
     elements = REXML::XPath.match(doc, '/RSAKeyValue/*')
-    elements.each do |e|
-      next unless ELEMENTS.include?(e.name)
-      ms_rsa.instance_variable_set("@#{ELEMENTS[e.name]}", e.text)
+    elements.each do |element|
+      name = element.name
+      next unless ELEMENTS.include?(name)
+      ms_rsa.instance_variable_set("@#{ELEMENTS[name]}", element.text)
     end
 
     ms_rsa
   end
 
   def to_openssl_pkey
-    asn1 = OpenSSL::ASN1::Sequence([
+    asn1_sequence = OpenSSL::ASN1::Sequence([
       OpenSSL::ASN1::Integer(0),
-      base64_to_asn1_int(@n),
-      base64_to_asn1_int(@e),
-      base64_to_asn1_int(@d),
-      base64_to_asn1_int(@p),
-      base64_to_asn1_int(@q),
-      base64_to_asn1_int(@dmp1),
-      base64_to_asn1_int(@dmq1),
-      base64_to_asn1_int(@iqmp),
+      Utils.base64_to_asn1_int(n),
+      Utils.base64_to_asn1_int(e),
+      Utils.base64_to_asn1_int(d),
+      Utils.base64_to_asn1_int(p),
+      Utils.base64_to_asn1_int(q),
+      Utils.base64_to_asn1_int(dmp1),
+      Utils.base64_to_asn1_int(dmq1),
+      Utils.base64_to_asn1_int(iqmp),
     ])
-    OpenSSL::PKey::RSA.new(asn1.to_der)
+    OpenSSL::PKey::RSA.new(asn1_sequence.to_der)
   end
 
   def inspect
     # Don't expose sensitive information to console
     self.to_s
-  end
-
-  private
-
-  def base64_to_asn1_int(s)
-    bn = OpenSSL::BN.new(Base64.decode64(s), 2)
-    OpenSSL::ASN1::Integer(bn)
   end
 end

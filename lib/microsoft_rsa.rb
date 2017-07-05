@@ -1,5 +1,6 @@
 require 'rexml/document'
 require 'openssl'
+require 'pathname'
 
 require 'microsoft_rsa/utils'
 
@@ -22,11 +23,17 @@ class MicrosoftRSA
     attr_reader field
   end
 
-  def self.load(path)
-    ms_rsa = self.new
+  def self.load(source)
+    if ::Pathname.new(source).file?
+      source = ::File.new(source)
+    end
 
-    file = File.new(path)
-    doc = REXML::Document.new(file)
+    parse(source)
+  end
+
+  def self.parse(doc)
+    ms_rsa = self.new
+    doc = REXML::Document.new(doc)
 
     elements = REXML::XPath.match(doc, '/RSAKeyValue/*')
     elements.each do |element|
@@ -49,12 +56,12 @@ class MicrosoftRSA
       Utils.base64_to_asn1_int(dmp1),
       Utils.base64_to_asn1_int(dmq1),
       Utils.base64_to_asn1_int(iqmp),
-    ])
-    OpenSSL::PKey::RSA.new(asn1_sequence.to_der)
-  end
+      ])
+      OpenSSL::PKey::RSA.new(asn1_sequence.to_der)
+    end
 
-  def inspect
-    # Don't expose sensitive information to console
-    self.to_s
+    def inspect
+      # Don't expose sensitive information to console
+      self.to_s
+    end
   end
-end

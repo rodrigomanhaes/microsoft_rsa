@@ -19,6 +19,14 @@ class TestMicrosoftRSA < Minitest::Test
     assert_instance_of OpenSSL::PKey::RSA, ms_rsa.to_openssl_pkey
   end
 
+  def test_parse_missing_rsa_file
+    assert_raises(Errno::ENOENT) { MicrosoftRSA.parse(::File.new(XML_PRIVATE_KEY+".missing")) }
+  end
+
+  def test_load_missing_rsa_file
+    assert_raises(Errno::ENOENT) { MicrosoftRSA.load(XML_PRIVATE_KEY+".missing") }
+  end
+
   def test_microsoft_rsa_class
     assert_instance_of MicrosoftRSA, @ms_rsa
   end

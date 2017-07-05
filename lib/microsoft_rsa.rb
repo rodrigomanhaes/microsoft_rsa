@@ -1,6 +1,5 @@
 require 'rexml/document'
 require 'openssl'
-require 'pathname'
 
 require 'microsoft_rsa/utils'
 
@@ -24,7 +23,7 @@ class MicrosoftRSA
   end
 
   def self.load(source)
-    if ::Pathname.new(source).file?
+    unless source =~ /RSAKeyValue/
       source = ::File.new(source)
     end
 

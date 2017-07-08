@@ -1,9 +1,24 @@
 require 'rexml/document'
-require 'erb'
 
 require 'microsoft_rsa'
 
 class OpenSSL::PKey::RSA
+  def to_xml
+    doc = REXML::Document.new
+    doc.add_element('RSAKeyValue')
+
+    MicrosoftRSA::ELEMENTS.each do |k,v|
+      next if self.send(v).nil?
+      text = MicrosoftRSA::Utils.bn_to_base64(self.send(v))
+      doc[0] << REXML::Element.new(k).add_text(text)
+    end
+
+    # Funky hack to write to a string instead of IO
+    xml = ""
+    doc.write(xml, 2)
+    xml
+  end
+
   class << self
     def from_xml(source)
       unless source =~ /RSAKeyValue/

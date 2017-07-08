@@ -1,3 +1,4 @@
+require 'openssl'
 require 'rexml/document'
 
 require 'microsoft_rsa'

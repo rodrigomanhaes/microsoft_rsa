@@ -69,6 +69,8 @@ class MicrosoftRSA
     ::File.open(filename, 'w') {|f| build_xml_doc.write(f, 2) }
   end
 
+  private
+
   def build_xml_doc
     doc = REXML::Document.new
     doc.add_element('RSAKeyValue')
@@ -78,14 +80,5 @@ class MicrosoftRSA
     end
 
     doc
-  end
-
-  def build_xml_string
-    template = File.join(File.dirname(__FILE__), "/templates/RSAKeyValue.xml.erb")
-    ERB.new(::File.read(template), safe_level=nil, trim_mode='-').result(binding)
-  end
-
-  def microsoft_rsa_template
-    %q{RSAKeyValue>\n<% MicrosoftRSA::ELEMENTS.each do |k,v| -%>\n  <%= "<#{k}>#{self.send(v)}</#{k}>" unless self.send(v).nil? %>\n<% end -%>\n</RSAKeyValue>\n}
   end
 end

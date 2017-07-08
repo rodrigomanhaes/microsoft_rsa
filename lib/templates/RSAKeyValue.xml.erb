@@ -1,0 +1,5 @@
+<RSAKeyValue>
+<% MicrosoftRSA::ELEMENTS.each do |k,v| -%>
+  <%= "<#{k}>#{self.send(v)}</#{k}>" unless self.send(v).nil? %>
+<% end -%>
+</RSAKeyValue>

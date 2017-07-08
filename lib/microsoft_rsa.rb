@@ -43,7 +43,7 @@ class MicrosoftRSA
         value = element.text
 
         next unless ELEMENTS.include?(name)
-        ms_rsa.send("#{ELEMENTS[name]}=", element.text)
+        ms_rsa.send("#{ELEMENTS[name]}=", element.text.strip)
       end
 
       ms_rsa
@@ -51,18 +51,11 @@ class MicrosoftRSA
   end
 
   def to_openssl_pkey
-    asn1_sequence = OpenSSL::ASN1::Sequence([
-      OpenSSL::ASN1::Integer(0),
-      Utils.base64_to_asn1_int(n),
-      Utils.base64_to_asn1_int(e),
-      Utils.base64_to_asn1_int(d),
-      Utils.base64_to_asn1_int(p),
-      Utils.base64_to_asn1_int(q),
-      Utils.base64_to_asn1_int(dmp1),
-      Utils.base64_to_asn1_int(dmq1),
-      Utils.base64_to_asn1_int(iqmp),
-    ])
-    OpenSSL::PKey::RSA.new(asn1_sequence.to_der)
+    pkey = OpenSSL::PKey::RSA.new
+    ELEMENTS.each_value do |method|
+      pkey.send("#{method}=", Utils.base64_to_bn(self.send(method))) unless self.send(method).nil?
+    end
+    pkey
   end
 
   alias :inspect_old :inspect
@@ -72,22 +65,27 @@ class MicrosoftRSA
     self.to_s
   end
 
-  def save
-    #::File.
+  def save(filename)
+    ::File.open(filename, 'w') {|f| build_xml_doc.write(f, 2) }
   end
 
-  def build
-    ERB.new(microsoft_rsa_template, safe_level=nil, trim_mode='-').result(binding)
+  def build_xml_doc
+    doc = REXML::Document.new
+    doc.add_element('RSAKeyValue')
+
+    MicrosoftRSA::ELEMENTS.each do |k,v|
+      doc[0] << REXML::Element.new(k).add_text(self.send(v)) unless self.send(v).nil?
+    end
+
+    doc
+  end
+
+  def build_xml_string
+    template = File.join(File.dirname(__FILE__), "/templates/RSAKeyValue.xml.erb")
+    ERB.new(::File.read(template), safe_level=nil, trim_mode='-').result(binding)
   end
 
   def microsoft_rsa_template
-    %q{
-      <RSAKeyValue>
-        <%= self.inspect %>
-        <% MicrosoftRSA::ELEMENTS.each do |k,v| -%>
-        <% "<#{k}>#{self.send(v)}</#{k}>" unless self.send(v).nil? %>
-        <% end -%>
-      </RSAKeyValue>
-    }.strip_heredoc
+    %q{RSAKeyValue>\n<% MicrosoftRSA::ELEMENTS.each do |k,v| -%>\n  <%= "<#{k}>#{self.send(v)}</#{k}>" unless self.send(v).nil? %>\n<% end -%>\n</RSAKeyValue>\n}
   end
 end

@@ -9,10 +9,8 @@ class MicrosoftRSA
       end
 
       def bn_to_base64(bn)
-        Base64.encode64(bn.to_s(2))
+        Base64.encode64(bn.to_s(2)).gsub(/\s+/, "")
       end
-
-      private
 
       def base64_to_bn(base64_string)
         OpenSSL::BN.new(Base64.decode64(base64_string), 2)

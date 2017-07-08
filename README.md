@@ -24,6 +24,9 @@ EOF
 
 rsa = OpenSSL::PKey::RSA.from_xml(xml)
 # => #<OpenSSL::PKey::RSA:0x007fcd851527c8>
+
+xml_string = rsa.to_xml
+rexml_doc = rsa.to_rexml
 ```
 
 Contributing to microsoft_rsa

@@ -1,7 +1,30 @@
 microsoft_rsa
 =============
 
-Description goes here.
+Add support for Microsoft's `RSAKeyValue` XML keys to Ruby's `OpenSSL::PKey::RSA` class.
+
+Usage
+-----
+
+```ruby
+require 'microsoft_rsa'
+
+xml = <<-EOF
+<RSAKeyValue>
+   <Modulus>t6tLd1Wi7PEkwPfx9KGP1Ps/5F2saXnOsCE2U....</Modulus>
+   <Exponent>AQAB</Exponent>
+   <P>3LJ5y4Vla7cS3XgmbIH5dQgppUHa+aSWavEOCbDRS/M....</P>
+   <Q>1QyGIAnjv4YLcRVdwXtxWkijc+aZ496qIBZnCAUUD/E....</Q>
+   <DP>0821dc0f+LBKOqIEvj4+2kJrNV5ueQesFBYkEsjPFM....</DP>
+   <DQ>ugSzX2oDJwjdGKG1OOiVcmUWAm6IU4PpOxcUYtY8TC....</DQ>
+   <InverseQ>LDQIQu+LSB6CSZBrGxNQthWi9mkuPGVZyDDr....</InverseQ>
+   <D>qZm2bXKH8WwbsJ8ZlT3S1TbgUifppLrqSRkb8XqEcMv....</D>
+</RSAKeyValue>}
+EOF
+
+rsa = OpenSSL::PKey::RSA.from_xml(xml)
+# => #<OpenSSL::PKey::RSA:0x007fcd851527c8>
+```
 
 Contributing to microsoft_rsa
 -----------------------------
@@ -19,4 +42,3 @@ Copyright
 
 Copyright (c) 2017 Jason Barnett. See LICENSE.txt for
 further details.
-

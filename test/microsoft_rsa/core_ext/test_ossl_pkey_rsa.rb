@@ -14,6 +14,17 @@ class TestOpenSSLPKeyRSA < Minitest::Test
   end
 
   def test_to_xml
+    assert_instance_of String, @rsa_key.to_xml
     assert_equal ::File.read(XML_PRIVATE_KEY).strip, @rsa_key.to_xml.strip
+  end
+
+  def test_to_rexml
+    rexml = @rsa_key.to_rexml
+    assert_instance_of REXML::Document, @rsa_key.to_rexml
+
+    MicrosoftRSA::ELEMENTS.each do |k,v|
+      element = REXML::XPath.first(rexml, "/RSAKeyValue/#{k}")
+      assert_instance_of REXML::Element, element
+    end
   end
 end

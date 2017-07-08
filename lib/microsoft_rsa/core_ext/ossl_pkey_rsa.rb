@@ -5,6 +5,15 @@ require 'microsoft_rsa'
 
 class OpenSSL::PKey::RSA
   def to_xml
+    rexml = self.to_rexml
+
+    # Funky hack to write to a string instead of IO
+    xml = ""
+    rexml.write(xml, 2)
+    xml
+  end
+
+  def to_rexml
     doc = REXML::Document.new
     doc.add_element('RSAKeyValue')
 
@@ -14,10 +23,7 @@ class OpenSSL::PKey::RSA
       doc[0] << REXML::Element.new(k).add_text(text)
     end
 
-    # Funky hack to write to a string instead of IO
-    xml = ""
-    doc.write(xml, 2)
-    xml
+    doc
   end
 
   class << self
@@ -30,7 +36,7 @@ class OpenSSL::PKey::RSA
     end
 
     def parse_xml(doc)
-      rsa = new
+      rsa = OpenSSL::PKey::RSA.new
 
       doc = REXML::Document.new(doc)
       elements = REXML::XPath.match(doc, '/RSAKeyValue/*')

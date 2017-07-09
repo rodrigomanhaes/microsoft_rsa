@@ -25,7 +25,9 @@ begin
     # dependencies defined in Gemfile
   end
   Jeweler::RubygemsDotOrgTasks.new
-rescue LoadError
+rescue LoadError => e
+  $stderr.puts "WARNING: (normal in CI environment)"
+  $stderr.puts e.message
 end
 
 require 'rake/testtask'

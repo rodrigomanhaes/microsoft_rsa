@@ -1,5 +1,4 @@
 require 'microsoft_rsa/core_ext/ossl_pkey_rsa'
-require 'microsoft_rsa/utils'
 
 module MicrosoftRSA
   ELEMENTS = {

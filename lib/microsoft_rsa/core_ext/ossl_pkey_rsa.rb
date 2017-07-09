@@ -1,7 +1,6 @@
 require 'openssl'
 require 'rexml/document'
-
-require 'microsoft_rsa'
+require 'microsoft_rsa/utils'
 
 class OpenSSL::PKey::RSA
   def to_xml

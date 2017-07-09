@@ -46,7 +46,7 @@ class OpenSSL::PKey::RSA
 
         next unless MicrosoftRSA::ELEMENTS.include?(name)
 
-        rsa.send("#{MicrosoftRSA::ELEMENTS[name]}=", MicrosoftRSA::Utils.base64_to_bn(element.text))
+        rsa.send("#{MicrosoftRSA::ELEMENTS[name]}=", MicrosoftRSA::Utils.base64_to_bn(value))
       end
 
       rsa

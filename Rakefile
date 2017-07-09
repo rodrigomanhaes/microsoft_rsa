@@ -11,19 +11,22 @@ rescue Bundler::BundlerError => e
 end
 require 'rake'
 
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
-  gem.name = "microsoft_rsa"
-  gem.homepage = "http://github.com/jasonwbarnett/microsoft_rsa"
-  gem.license = "MIT"
-  gem.summary = %Q{Microsoft RSAKeyValue XML structure support for Ruby}
-  gem.description = %Q{This gem enables you to convert RSAKeyValue XML structures to OpenSSL RSA Private Key and vice versa}
-  gem.email = "jason.w.barnett@gmail.com"
-  gem.authors = ["Jason Barnett"]
-  # dependencies defined in Gemfile
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    # gem is a Gem::Specification... see http://guides.rubygems.org/specification-reference/ for more options
+    gem.name = "microsoft_rsa"
+    gem.homepage = "http://github.com/jasonwbarnett/microsoft_rsa"
+    gem.license = "MIT"
+    gem.summary = %Q{Microsoft RSAKeyValue XML structure support for Ruby}
+    gem.description = %Q{This gem enables you to convert RSAKeyValue XML structures to OpenSSL RSA Private Key and vice versa}
+    gem.email = "jason.w.barnett@gmail.com"
+    gem.authors = ["Jason Barnett"]
+    # dependencies defined in Gemfile
+  end
+  Jeweler::RubygemsDotOrgTasks.new
+rescue LoadError
 end
-Jeweler::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|

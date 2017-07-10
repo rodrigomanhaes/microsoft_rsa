@@ -1,3 +1,7 @@
+[![Coverage Status](https://coveralls.io/repos/github/jasonwbarnett/microsoft_rsa/badge.svg?branch=master)](https://coveralls.io/github/jasonwbarnett/microsoft_rsa?branch=master)
+
+[![Build Status](https://travis-ci.org/jasonwbarnett/microsoft_rsa.svg?branch=master)](https://travis-ci.org/jasonwbarnett/microsoft_rsa)
+
 microsoft_rsa
 =============
 

@@ -1,7 +1,6 @@
-require 'minitest/autorun'
-require 'microsoft_rsa'
+require 'test_helper'
 
-class TestMicrosoftRSAModule < Minitest::Test
+class MicrosoftRSAModuleTest < Minitest::Test
   def test_microsoft_rsa_is_a_module
     assert_instance_of Module, MicrosoftRSA
   end

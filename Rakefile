@@ -6,6 +6,7 @@ begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
   $stderr.puts e.message
+  $stderr.puts "poop"
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
@@ -26,14 +27,13 @@ begin
   end
   Jeweler::RubygemsDotOrgTasks.new
 rescue LoadError => e
-  $stderr.puts "WARNING: (normal in CI environment)"
-  $stderr.puts e.message
+  $stderr.puts e.message + " (normal in CI environment -- otherwise run `bundle install`)"
 end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
+  test.pattern = 'test/**/*_test.rb'
   test.verbose = true
 end
 

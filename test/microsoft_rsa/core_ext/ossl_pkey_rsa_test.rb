@@ -1,7 +1,6 @@
-require 'minitest/autorun'
-require 'microsoft_rsa'
+require 'test_helper'
 
-class TestOpenSSLPKeyRSA < Minitest::Test
+class OpenSSLPKeyRSATest < Minitest::Test
   XML_PRIVATE_KEY = "./test/fixtures/2048.xml"
   RSA_PRIVATE_KEY = "./test/fixtures/2048.key"
 

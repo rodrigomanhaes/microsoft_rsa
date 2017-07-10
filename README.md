@@ -1,5 +1,4 @@
 [![Coverage Status](https://coveralls.io/repos/github/jasonwbarnett/microsoft_rsa/badge.svg?branch=master)](https://coveralls.io/github/jasonwbarnett/microsoft_rsa?branch=master)
-
 [![Build Status](https://travis-ci.org/jasonwbarnett/microsoft_rsa.svg?branch=master)](https://travis-ci.org/jasonwbarnett/microsoft_rsa)
 
 microsoft_rsa
@@ -23,14 +22,17 @@ xml = <<-EOF
    <DQ>ugSzX2oDJwjdGKG1OOiVcmUWAm6IU4PpOxcUYtY8TC....</DQ>
    <InverseQ>LDQIQu+LSB6CSZBrGxNQthWi9mkuPGVZyDDr....</InverseQ>
    <D>qZm2bXKH8WwbsJ8ZlT3S1TbgUifppLrqSRkb8XqEcMv....</D>
-</RSAKeyValue>}
+</RSAKeyValue>
 EOF
 
 rsa = OpenSSL::PKey::RSA.from_xml(xml)
 # => #<OpenSSL::PKey::RSA:0x007fcd851527c8>
 
-xml_string = rsa.to_xml
-rexml_doc = rsa.to_rexml
+rsa.to_xml
+# => "<RSAKeyValue>\n   <Modulus>t6tLd1Wi7PEkwPfx9KGP1Ps/5F2saXnOsCE2U....</Modulus>\n   <Exponent>AQAB</Exponent>\n   <P>3LJ5y4Vla7cS3XgmbIH5dQgppUHa+aSWavEOCbDRS/M....</P>\n   <Q>1QyGIAnjv4YLcRVdwXtxWkijc+aZ496qIBZnCAUUD/E....</Q>\n   <DP>0821dc0f+LBKOqIEvj4+2kJrNV5ueQesFBYkEsjPFM....</DP>\n   <DQ>ugSzX2oDJwjdGKG1OOiVcmUWAm6IU4PpOxcUYtY8TC....</DQ>\n   <InverseQ>LDQIQu+LSB6CSZBrGxNQthWi9mkuPGVZyDDr....</InverseQ>\n   <D>qZm2bXKH8WwbsJ8ZlT3S1TbgUifppLrqSRkb8XqEcMv....</D>\n</RSAKeyValue>\n"
+
+rsa.to_rexml.class.name
+# => "REXML::Document"
 ```
 
 Contributing to microsoft_rsa

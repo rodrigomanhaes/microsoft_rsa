@@ -7,7 +7,7 @@ rvm:
   - 2.2.0
   - 2.3.0
   - 2.4.0
-gemfile: Gemfile.ci
+bundler_args: --without release
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter

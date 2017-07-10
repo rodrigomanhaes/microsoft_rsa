@@ -1,5 +1,5 @@
 ## Uncomment to clear the screen before every task
-clearing :off
+clearing :on
 
 guard :minitest, include: ['lib'] do
   # with Minitest::Unit

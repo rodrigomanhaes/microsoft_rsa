@@ -9,7 +9,13 @@ class OpenSSLPKeyRSATest < Minitest::Test
   end
 
   def test_from_xml
-    assert_equal @rsa_key.params, OpenSSL::PKey::RSA.from_xml(XML_PRIVATE_KEY).params
+    if OpenSSL::PKey::RSA.new.respond_to?(:set_key)
+      assert_equal \
+        @rsa_key.params.transform_values(&:to_s),
+        OpenSSL::PKey::RSA.from_xml(XML_PRIVATE_KEY).params.transform_values(&:to_s)
+    else
+      assert_equal @rsa_key.params, OpenSSL::PKey::RSA.from_xml(XML_PRIVATE_KEY).params
+    end
   end
 
   def test_to_xml

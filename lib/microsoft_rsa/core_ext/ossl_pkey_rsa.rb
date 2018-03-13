@@ -36,9 +36,38 @@ class OpenSSL::PKey::RSA
 
     def parse_xml(doc)
       rsa = OpenSSL::PKey::RSA.new
-
       doc = REXML::Document.new(doc)
       elements = REXML::XPath.match(doc, '/RSAKeyValue/*')
+      if rsa.respond_to?(:set_key)
+        current_pkey_build(rsa, elements)
+      else
+        deprecated_pkey_build(rsa, elements)
+      end
+      rsa
+    end
+
+    private
+
+    def current_pkey_build(rsa, elements)
+      named_elements = elements.each_with_object({}) do |element, hash|
+        name = element.name
+        value = element.text
+        next unless MicrosoftRSA::ELEMENTS.include?(name)
+        hash[MicrosoftRSA::ELEMENTS[name]] = MicrosoftRSA::Utils.base64_to_bn(value)
+      end
+
+      rsa.set_key(*named_elements.values_at('n', 'e', 'd'))
+
+      factors = named_elements.values_at('p', 'q')
+      rsa.set_factors(*factors) if factors.all?
+
+      crt_params = named_elements.values_at('dmp1', 'dmq1', 'iqmp')
+      rsa.set_crt_params(*crt_params) if crt_params.all?
+
+      rsa
+    end
+
+    def deprecated_pkey_build(rsa, elements)
       elements.each do |element|
         name = element.name
         value = element.text
@@ -47,8 +76,6 @@ class OpenSSL::PKey::RSA
 
         rsa.send("#{MicrosoftRSA::ELEMENTS[name]}=", MicrosoftRSA::Utils.base64_to_bn(value))
       end
-
-      rsa
     end
   end
 end

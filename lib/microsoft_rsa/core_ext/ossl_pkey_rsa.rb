@@ -49,21 +49,25 @@ class OpenSSL::PKey::RSA
     private
 
     def current_pkey_build(rsa, elements)
-      named_elements = elements.each_with_object({}) do |element, hash|
+      named_elements = extract_named_elements(elements)
+      build_rsa_key(rsa, named_elements)
+    end
+
+    def extract_named_elements(elements)
+      elements.each_with_object({}) do |element, hash|
         name = element.name
         value = element.text
         next unless MicrosoftRSA::ELEMENTS.include?(name)
         hash[MicrosoftRSA::ELEMENTS[name]] = MicrosoftRSA::Utils.base64_to_bn(value)
       end
+    end
 
+    def build_rsa_key(rsa, named_elements)
       rsa.set_key(*named_elements.values_at('n', 'e', 'd'))
-
       factors = named_elements.values_at('p', 'q')
       rsa.set_factors(*factors) if factors.all?
-
       crt_params = named_elements.values_at('dmp1', 'dmq1', 'iqmp')
       rsa.set_crt_params(*crt_params) if crt_params.all?
-
       rsa
     end
 
